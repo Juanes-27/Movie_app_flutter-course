@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:movies_app/models/now_playing_response.dart';
 
 class MoviesProvider extends ChangeNotifier {
-  String _apiKey = 'e2f564dd458268eaa0a50da86b6b547c';
-  String _baseUrl = 'api.themoviedb.org';
-  String _language = 'es-ES';
+  final String _apiKey = 'e2f564dd458268eaa0a50da86b6b547c';
+  final String _baseUrl = 'api.themoviedb.org';
+  final String _language = 'es-ES';
 
   MoviesProvider() {
-    this.getOnDisplayMovies();
+    getOnDisplayMovies();
   }
 
   getOnDisplayMovies() async {
@@ -16,8 +16,7 @@ class MoviesProvider extends ChangeNotifier {
         {'api_key': _apiKey, 'language': _language, 'page': '1'});
 
     final response = await http.get(url);
-
-    final Map<String, dynamic> decodedData = json.decode(response.body);
-    print(decodedData['dates']);
+    final nowPlayingResponse = NowPlayingResponse.fromRawJson(response.body);
+    print(nowPlayingResponse.results[0].title);
   }
 }
