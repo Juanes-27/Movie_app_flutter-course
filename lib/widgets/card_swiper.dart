@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:movies_app/models/models.dart';
 
 class CardSwiper extends StatelessWidget {
-  const CardSwiper({super.key});
+  final List<Movie> movies;
+  const CardSwiper({
+    super.key,
+    required this.movies,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -11,27 +16,40 @@ class CardSwiper extends StatelessWidget {
     return Container(
       width: size.width,
       height: size.height * 0.5,
-      //color: Colors.lightBlue.withOpacity(0.5),
-      child: Swiper(
-        itemCount: 10,
-        layout: SwiperLayout.STACK,
-        itemWidth: size.width * 0.6,
-        itemHeight: size.height * 0.4,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () => Navigator.pushNamed(context, 'details',
-                arguments: 'movie-instance'),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: const FadeInImage(
-                placeholder: AssetImage('assets/loading.gif'),
-                image: NetworkImage(
-                    'https://vignette.wikia.nocookie.net/animebattlearenaaba/images/0/0b/Rock.png/revision/latest?cb=20191013204819'),
-                fit: BoxFit.cover,
-              ),
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'En Cartelera',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-          );
-        },
+          ),
+          Expanded(
+            child: Swiper(
+              itemCount: movies.length,
+              layout: SwiperLayout.STACK,
+              itemWidth: size.width * 0.6,
+              itemHeight: size.height * 0.4,
+              itemBuilder: (context, index) {
+                final movie = movies[index];
+
+                return GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, 'details',
+                      arguments: 'movie-instance'),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: FadeInImage(
+                      placeholder: const AssetImage('assets/loading.gif'),
+                      image: NetworkImage(movie.fullPosterImg),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

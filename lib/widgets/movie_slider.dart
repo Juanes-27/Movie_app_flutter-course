@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/models/models.dart';
 
 class MovieSlider extends StatelessWidget {
-  const MovieSlider({super.key});
+  final List<Movie> movies;
+  const MovieSlider({super.key, required this.movies});
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +23,11 @@ class MovieSlider extends StatelessWidget {
         Expanded(
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 20,
-              itemBuilder: (context, index) => const _MoviePoster()),
+              itemCount: movies.length,
+              itemBuilder: (context, index) {
+                final movie = movies[index];
+                return _MoviePoster(popularMovie: movie);
+              }),
         )
       ]),
     );
@@ -30,7 +35,9 @@ class MovieSlider extends StatelessWidget {
 }
 
 class _MoviePoster extends StatelessWidget {
-  const _MoviePoster();
+  final Movie popularMovie;
+
+  const _MoviePoster({required this.popularMovie});
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +49,12 @@ class _MoviePoster extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, 'details',
-                  arguments: 'movie-instance'),
+                  arguments: 'popularMovies-instance'),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50),
-                child: const FadeInImage(
-                  placeholder: AssetImage('assets/no-image.jpg'),
-                  image: NetworkImage(
-                      'https://vignette.wikia.nocookie.net/animebattlearenaaba/images/0/0b/Rock.png/revision/latest?cb=20191013204819'),
+                child: FadeInImage(
+                  placeholder: const AssetImage('assets/no-image.jpg'),
+                  image: NetworkImage(popularMovie.fullPosterImg),
                   width: 130,
                   height: 190,
                   fit: BoxFit.cover,
@@ -58,8 +64,8 @@ class _MoviePoster extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              'Rock Lee vs Gara: La pelea del año',
+            Text(
+              popularMovie.title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
