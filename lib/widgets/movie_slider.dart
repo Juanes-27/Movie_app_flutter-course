@@ -7,8 +7,7 @@ class MovieSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: sized_box_for_whitespace
-    return Container(
+    return SizedBox(
       width: double.infinity * 0.9,
       height: 260,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
