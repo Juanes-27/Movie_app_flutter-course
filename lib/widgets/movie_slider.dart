@@ -3,7 +3,8 @@ import 'package:movies_app/models/models.dart';
 
 class MovieSlider extends StatelessWidget {
   final List<Movie> movies;
-  const MovieSlider({super.key, required this.movies});
+  final String? tittle;
+  const MovieSlider({super.key, required this.movies, this.tittle});
 
   @override
   Widget build(BuildContext context) {
@@ -11,13 +12,14 @@ class MovieSlider extends StatelessWidget {
       width: double.infinity * 0.9,
       height: 260,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            'Populares',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        if (tittle != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              tittle!,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
-        ),
         const SizedBox(height: 5),
         Expanded(
           child: ListView.builder(
