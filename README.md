@@ -1,6 +1,6 @@
 # movies_app
 
-A new Flutter project.
+A movie app using TMDB API to show on display movies and popular movies with details.
 
 ## Getting Started
 
