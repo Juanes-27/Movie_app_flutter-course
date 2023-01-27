@@ -54,7 +54,7 @@ class _MovieSliderState extends State<MovieSlider> {
               itemCount: widget.movies.length,
               itemBuilder: (context, index) {
                 final movie = widget.movies[index];
-                return _MoviePoster(popularMovie: movie);
+                return _MoviePoster(movie: movie);
               }),
         )
       ]),
@@ -63,9 +63,9 @@ class _MovieSliderState extends State<MovieSlider> {
 }
 
 class _MoviePoster extends StatelessWidget {
-  final Movie popularMovie;
+  final Movie movie;
 
-  const _MoviePoster({required this.popularMovie});
+  const _MoviePoster({required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +76,13 @@ class _MoviePoster extends StatelessWidget {
         child: Column(
           children: [
             GestureDetector(
-              onTap: () => Navigator.pushNamed(context, 'details',
-                  arguments: 'popularMovies-instance'),
+              onTap: () =>
+                  Navigator.pushNamed(context, 'details', arguments: movie),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: FadeInImage(
                   placeholder: const AssetImage('assets/no-image.jpg'),
-                  image: NetworkImage(popularMovie.fullPosterImg),
+                  image: NetworkImage(movie.fullPosterImg),
                   width: 130,
                   height: 190,
                   fit: BoxFit.cover,
@@ -93,7 +93,7 @@ class _MoviePoster extends StatelessWidget {
               height: 10,
             ),
             Text(
-              popularMovie.title,
+              movie.title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
