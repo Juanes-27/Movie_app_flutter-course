@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies_app/models/models.dart';
+import 'package:movies_app/providers/movies_provider.dart';
+import 'package:provider/provider.dart';
 
 class CastingCards extends StatelessWidget {
   final int movieId;
@@ -7,19 +10,36 @@ class CastingCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.only(bottom: 30),
-        width: double.infinity * 0.9,
-        color: Colors.black12.withOpacity(0.1),
-        height: 180,
-        child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 10,
-            itemBuilder: (_, index) => _CastCard()));
+    final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
+
+    return FutureBuilder(
+        future: moviesProvider.getMovieCast(movieId),
+        builder: ((_, snapshot) {
+          if (!snapshot.hasData) {
+            return Container(
+              constraints: BoxConstraints(maxWidth: 150),
+              height: 180,
+              child: CupertinoActivityIndicator(),
+            );
+          }
+
+          final cast = snapshot.data!;
+          return Container(
+              margin: const EdgeInsets.only(bottom: 30),
+              width: double.infinity * 0.9,
+              color: Colors.black12.withOpacity(0.1),
+              height: 180,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: cast.length,
+                  itemBuilder: (_, index) => _CastCard(cast: cast)));
+        }));
   }
 }
 
 class _CastCard extends StatelessWidget {
+  final List<Cast> cast;
+  const _CastCard({required this.cast});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,8 +59,8 @@ class _CastCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        const Text(
-          'actor.namedddfas fsdafasdfasdfd',
+        Text(
+          cast.toString(),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,

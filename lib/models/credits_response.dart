@@ -60,10 +60,11 @@ class Cast {
   String? job;
 
   get fullProfilePath {
-    if (profilePath != null)
+    if (profilePath != null) {
       return 'https://image.tmdb.org/t/p/w500$profilePath';
-
-    return 'https://i.stack.imgur.com/GNhxO.png';
+    } else {
+      return 'https://i.stack.imgur.com/GNhxO.png';
+    }
   }
 
   factory Cast.fromRawJson(String str) => Cast.fromJson(json.decode(str));
@@ -81,7 +82,7 @@ class Cast {
         character: json["character"],
         creditId: json["credit_id"],
         order: json["order"],
-        department: departmentValues.map[json["department"]]!,
+        department: departmentValues.map[json["department"]],
         job: json["job"],
       );
 }
