@@ -31,7 +31,6 @@ class Cast {
     required this.adult,
     required this.gender,
     required this.id,
-    required this.knownForDepartment,
     required this.name,
     required this.originalName,
     required this.popularity,
@@ -40,14 +39,12 @@ class Cast {
     this.character,
     required this.creditId,
     this.order,
-    this.department,
     this.job,
   });
 
   bool adult;
   int gender;
   int id;
-  Department knownForDepartment;
   String name;
   String originalName;
   double popularity;
@@ -56,7 +53,6 @@ class Cast {
   String? character;
   String creditId;
   int? order;
-  Department? department;
   String? job;
 
   get fullProfilePath {
@@ -73,7 +69,7 @@ class Cast {
         adult: json["adult"],
         gender: json["gender"],
         id: json["id"],
-        knownForDepartment: departmentValues.map[json["known_for_department"]]!,
+        //knownForDepartment: departmentValues.map[json["known_for_department"]]!,
         name: json["name"],
         originalName: json["original_name"],
         popularity: json["popularity"]?.toDouble(),
@@ -82,45 +78,7 @@ class Cast {
         character: json["character"],
         creditId: json["credit_id"],
         order: json["order"],
-        department: departmentValues.map[json["department"]],
+        //department: departmentValues.map[json["department"]],
         job: json["job"],
       );
-}
-
-enum Department {
-  ACTING,
-  DIRECTING,
-  EDITING,
-  WRITING,
-  PRODUCTION,
-  SOUND,
-  ART,
-  VISUAL_EFFECTS,
-  CREW,
-  CAMERA
-}
-
-final departmentValues = EnumValues({
-  "Acting": Department.ACTING,
-  "Art": Department.ART,
-  "Camera": Department.CAMERA,
-  "Crew": Department.CREW,
-  "Directing": Department.DIRECTING,
-  "Editing": Department.EDITING,
-  "Production": Department.PRODUCTION,
-  "Sound": Department.SOUND,
-  "Visual Effects": Department.VISUAL_EFFECTS,
-  "Writing": Department.WRITING
-});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

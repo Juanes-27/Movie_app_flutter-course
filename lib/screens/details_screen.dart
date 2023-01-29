@@ -18,6 +18,9 @@ class DatailScreen extends StatelessWidget {
             delegate: SliverChildListDelegate([
           _PosterAndTitle(movie: movie),
           _Overview(movie: movie),
+          const SizedBox(
+            height: 15,
+          ),
           CastingCards(movieId: movie.id)
         ]))
       ],
