@@ -40,45 +40,58 @@ class MovieSearchDelegate extends SearchDelegate {
     if (query.isEmpty) {
       return _emptyContainer();
     }
+
     final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
-    return FutureBuilder(
-      future: moviesProvider.searchMovies(query),
-      builder: (_, AsyncSnapshot<List<Movie>> snapshot) {
-        if (!snapshot.hasData) {
-          return _emptyContainer();
-        } else {
-          final movies = snapshot.data!;
-          return ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: movies.length,
-              itemBuilder: (_, index) => _SearchCard(
-                    movie: movies[index],
-                  ));
-        }
-      },
-    );
+    moviesProvider.getSuggestionsByQuery(query);
+    return StreamBuilder<Object>(
+        stream: moviesProvider.suggestionStream,
+        builder: (context, snapshot) {
+          return FutureBuilder(
+            future: moviesProvider.searchMovies(query),
+            builder: (_, AsyncSnapshot<List<Movie>> snapshot) {
+              if (!snapshot.hasData) {
+                return _emptyContainer();
+              } else {
+                final movies = snapshot.data!;
+                return ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: movies.length,
+                    itemBuilder: (_, index) => _SearchCard(
+                          movie: movies[index],
+                          heroId:
+                              '${movies[index].title}-$index-${movies[index].id}-search',
+                        ));
+              }
+            },
+          );
+        });
   }
 }
 
 class _SearchCard extends StatelessWidget {
   final Movie movie;
+  final String heroId;
 
-  const _SearchCard({required this.movie});
+  const _SearchCard({required this.movie, required this.heroId});
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: FadeInImage(
-        image: NetworkImage(movie.fullPosterImg),
-        placeholder: const AssetImage('assets/no-image.jpg'),
-        width: 50,
-        fit: BoxFit.contain,
+    movie.heroId = heroId;
+    return Hero(
+      tag: movie.heroId!,
+      child: ListTile(
+        leading: FadeInImage(
+          image: NetworkImage(movie.fullPosterImg),
+          placeholder: const AssetImage('assets/no-image.jpg'),
+          width: 50,
+          fit: BoxFit.contain,
+        ),
+        title: Text(movie.title),
+        subtitle: Text(movie.originalTitle),
+        onTap: () {
+          Navigator.pushNamed(context, 'details', arguments: movie);
+        },
       ),
-      title: Text(movie.title),
-      subtitle: Text(movie.originalTitle),
-      onTap: () {
-        Navigator.pushNamed(context, 'details', arguments: movie);
-      },
     );
   }
 }
